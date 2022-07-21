@@ -92,8 +92,6 @@ const OrderList = () => {
             sx={{
                backgroundColor: "white",
                borderRadius: "10px",
-               marginInline: "auto",
-               maxWidth: "600px",
                paddingInline: 5,
                paddingTop: 3,
                paddingBottom: 5,
