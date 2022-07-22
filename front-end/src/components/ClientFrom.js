@@ -24,8 +24,6 @@ const initialClientData = {
    instagram_link: { value: "", error: "", placeholder: "", required: false },
 };
 
-const testAutoCInputData = {};
-
 const ClientForm = () => {
    const [client, setClient] = useState(initialClientData);
    const {
@@ -40,13 +38,13 @@ const ClientForm = () => {
       let error = {};
       error.name = /^[a-zA-Z ]{2,20}$/.test(client.name.value.trim())
          ? ""
-         : "Name should be between 2 and 20 characters";
+         : "Should be between 2 and 20 characters";
       error.phone = /^\d{11}$/.test(client.phone.value)
          ? ""
-         : "Phone should be 11 numbers";
+         : "Should be 11 numbers";
       error.email = /^$|.+@.+\..+/.test(client.email.value)
          ? ""
-         : "Email should be in proper format";
+         : "Should be in proper format";
 
       setClient((prevClient) => {
          let tmp = { ...prevClient };
@@ -56,20 +54,13 @@ const ClientForm = () => {
       return Object.values(error).every((v) => v === "");
    };
 
-   const handleInputChange = (e) => {
-      const { name, value } = e.target;
-      setClient((prev) => {
-         return { ...prev, [name]: { ...prev[name], value: value } };
-      });
-   };
-
    const handleOnSubmit = (e) => {
       e.preventDefault();
       if (validateClient()) {
          console.log(client);
       }
    };
-   const inputTextFields = getInputFields(client, handleInputChange);
+   const inputTextFields = getInputFields(client, setClient);
    return (
       <form onSubmit={handleOnSubmit}>
          <Grid container spacing={3}>

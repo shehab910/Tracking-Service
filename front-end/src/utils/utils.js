@@ -9,15 +9,17 @@ export const firstLetterUpper = (string) => {
  * {
  * fieldName: { value: "", error: "", placeholder: "", required: Boolean  }
  * }.
- * @param {Function} handleInputChange - Function to handle input change
+ * @param {Function} setFieldData - Function to set the field data.
  * @param {Boolean} disabled - If true, All inputs will be disabled
  * @returns {Array} Array of styled TextFields
  */
-export const getInputFields = (
-   fieldData,
-   handleInputChange,
-   disabled = false
-) => {
+export const getInputFields = (fieldData, setFieldData, disabled = false) => {
+   const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setFieldData((prev) => {
+         return { ...prev, [name]: { ...prev[name], value: value } };
+      });
+   };
    return Object.keys(fieldData).map((item, index) => (
       <TextField
          margin="normal"

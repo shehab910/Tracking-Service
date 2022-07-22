@@ -7,6 +7,7 @@ import InfoBox from "./components/UI/InfoBox";
 import PaidIcon from "@mui/icons-material/PaidOutlined";
 // import AutoCompleteInput from "./components/UI/AutoCompleteInput";
 import ClientForm from "./components/ClientFrom";
+import ItemForm from "./components/UI/ItemForm";
 
 const theme = createTheme({
    palette: {
@@ -39,6 +40,7 @@ const MainComponent = () => {
       <Container>
          <Box margin={5}>
             <ClientForm />
+            <ItemForm />
          </Box>
       </Container>
    );
