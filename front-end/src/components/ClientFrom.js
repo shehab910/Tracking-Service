@@ -6,22 +6,39 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 
 const initialClientData = {
-   name: { value: "", error: "", placeholder: "Jaun Doe", required: true },
-   phone: { value: "", error: "", placeholder: "0123456789", required: true },
+   name: {
+      value: "",
+      error: "",
+      textFieldProps: { placeholder: "Jaun Doe", required: true },
+   },
+   phone: {
+      value: "",
+      error: "",
+      textFieldProps: { placeholder: "0123456789", required: true },
+   },
    email: {
       value: "",
       error: "",
-      placeholder: "jaun@example.com",
-      required: false,
+      textFieldProps: { placeholder: "jaun@example.com" },
    },
    address: {
       value: "",
       error: "",
-      placeholder: "123 Main St, Nasr City",
-      required: false,
+      textFieldProps: {
+         placeholder: "123 Main St, Nasr City",
+         required: false,
+      },
    },
-   facebook_link: { value: "", error: "", placeholder: "", required: false },
-   instagram_link: { value: "", error: "", placeholder: "", required: false },
+   facebook_link: {
+      value: "",
+      error: "",
+      textFieldProps: { placeholder: "" },
+   },
+   instagram_link: {
+      value: "",
+      error: "",
+      textFieldProps: { placeholder: "" },
+   },
 };
 
 const ClientForm = () => {
