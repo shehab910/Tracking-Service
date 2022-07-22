@@ -5,7 +5,7 @@ import { green, purple } from "@mui/material/colors";
 import { Container, CssBaseline, Stack, Box } from "@mui/material";
 import InfoBox from "./components/UI/InfoBox";
 import PaidIcon from "@mui/icons-material/PaidOutlined";
-import AutoCompleteInput from "./components/UI/AutoCompleteInput";
+// import AutoCompleteInput from "./components/UI/AutoCompleteInput";
 import ClientForm from "./components/ClientFrom";
 
 const theme = createTheme({
@@ -56,10 +56,6 @@ const MainComponent = () => {
                }}
                maxWidth="lg"
             >
-               <AutoCompleteInput
-                  label="Client"
-                  options={["red", "Blue", "Green", "Yellow"]}
-               />
                <Stack direction="row">
                   {Array(5)
                      .fill(0)
