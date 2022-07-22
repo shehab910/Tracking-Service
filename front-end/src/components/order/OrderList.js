@@ -92,8 +92,6 @@ const OrderList = () => {
             sx={{
                backgroundColor: "white",
                borderRadius: "10px",
-               marginInline: "auto",
-               maxWidth: "600px",
                paddingInline: 5,
                paddingTop: 3,
                paddingBottom: 5,
@@ -124,48 +122,6 @@ const OrderList = () => {
          </Paper>
       </>
    );
-
-   // return (
-   //    <section>
-   //       <Card>
-   //          <h3>recent orders</h3>
-   //          <table>
-   //             <thead>
-   //                <tr>
-   //                   <th>Client</th>
-   //                   <th>Order ID</th>
-   //                   <th>Amount</th>
-   //                   <th>Date</th>
-   //                   <th>status</th>
-   //                </tr>
-   //             </thead>
-   //             <tbody>
-   //                <tr>
-   //                   <td>text1.1</td>
-   //                   <td>text1.2</td>
-   //                   <td>text1.3</td>
-   //                   <td>text1.4</td>
-   //                   <td>text1.5</td>
-   //                </tr>
-   //                <tr>
-   //                   <td>text2.1</td>
-   //                   <td>text2.2</td>
-   //                   <td>text2.3</td>
-   //                   <td>text2.4</td>
-   //                   <td>text2.5</td>
-   //                </tr>
-   //                <tr>
-   //                   <td>text3.1</td>
-   //                   <td>text3.2</td>
-   //                   <td>text3.3</td>
-   //                   <td>text3.4</td>
-   //                   <td>text3.5</td>
-   //                </tr>
-   //             </tbody>
-   //          </table>
-   //       </Card>
-   //    </section>
-   // );
 };
 
 export default OrderList;
