@@ -38,7 +38,31 @@ const initialItemData = {
    },
 };
 
-const ItemForm = () => {
+const validateItem = (item, setItem) => {
+   let error = {};
+   error.product_link = /^https:\/\/.*\..*..*$/.test(
+      item.product_link.value.trim()
+   )
+      ? ""
+      : "Should be in proper format";
+   error.original_price = /^[\d]+(\.[\d]+)?$/.test(item.original_price.value)
+      ? ""
+      : "Should be in proper format ex. 21.99";
+   error.deal_price = /^[\d]+(\.[\d]+)?$/.test(item.deal_price.value)
+      ? ""
+      : "Should be in proper format ex. 21.99";
+   error.count = /^[1-9][0-9]*$/.test(item.count.value)
+      ? ""
+      : "Should be a positive integer";
+   setItem((prevClient) => {
+      let tmp = { ...prevClient };
+      Object.keys(tmp).forEach((key) => (tmp[key].error = error[key]));
+      return tmp;
+   });
+   return Object.values(error).every((v) => v === "");
+};
+
+const ItemForm = ({ setItems }) => {
    const [item, setItem] = useState(initialItemData);
 
    useEffect(() => {
@@ -57,33 +81,10 @@ const ItemForm = () => {
       });
    }, [item.product_link.value]);
 
-   const validateItem = () => {
-      let error = {};
-      error.product_link = /^https:\/\/.*\..*..*$/.test(
-         item.product_link.value.trim()
-      )
-         ? ""
-         : "Should be in proper format";
-      error.original_price = /^[\d]+(\.[\d]+)?$/.test(item.original_price.value)
-         ? ""
-         : "Should be in proper format ex. 21.99";
-      error.deal_price = /^[\d]+(\.[\d]+)?$/.test(item.deal_price.value)
-         ? ""
-         : "Should be in proper format ex. 21.99";
-      error.count = /^[1-9][0-9]*$/.test(item.count.value)
-         ? ""
-         : "Should be a positive integer";
-      setItem((prevClient) => {
-         let tmp = { ...prevClient };
-         Object.keys(tmp).forEach((key) => (tmp[key].error = error[key]));
-         return tmp;
-      });
-      return Object.values(error).every((v) => v === "");
-   };
-
    const handleOnSumbit = (e) => {
       e.preventDefault();
-      if (validateItem()) {
+      if (validateItem(item, setItem)) {
+         setItems((prev) => [...prev, item]);
          console.log(item);
       }
    };
@@ -96,8 +97,22 @@ const ItemForm = () => {
                item
                sx={{ display: "flex", flexDirection: "column" }}
                xs={12}
+               sm={12}
+               md={6}
             >
-               {inputFields.map((i) => i)}
+               {inputFields.slice(0, Math.ceil(inputFields.length / 2))}
+            </Grid>
+            <Grid
+               item
+               sx={{ display: "flex", flexDirection: "column" }}
+               xs={12}
+               sm={12}
+               md={6}
+            >
+               {inputFields.slice(
+                  Math.ceil(inputFields.length / 2),
+                  inputFields.length
+               )}
             </Grid>
             <Grid item xs={12}>
                <Box

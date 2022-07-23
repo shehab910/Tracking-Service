@@ -56,3 +56,11 @@ export const sliceBetween = (str, str1, str2) => {
    if (index2 === -1) return "";
    return str.slice(index1, index2);
 };
+
+export const convertToEGP = (number) => {
+   if (!(number instanceof Number)) number = parseFloat(number);
+   return number.toLocaleString("en-US", {
+      style: "currency",
+      currency: "EGP",
+   });
+};

@@ -5,7 +5,7 @@ import { useAutoCompleteInput } from "./UI/AutoCompleteInput";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 
-const initialClientData = {
+export const initialClientData = {
    name: {
       value: "",
       error: "",
@@ -41,39 +41,42 @@ const initialClientData = {
    },
 };
 
-const ClientForm = () => {
-   const [client, setClient] = useState(initialClientData);
+export const validateClient = (client, setClient) => {
+   let error = {};
+   error.name = /^[a-zA-Z ]{2,20}$/.test(client.name.value.trim())
+      ? ""
+      : "Should be between 2 and 20 characters";
+   error.phone = /^\d{11}$/.test(client.phone.value)
+      ? ""
+      : "Should be 11 numbers";
+   error.email = /^$|.+@.+\..+/.test(client.email.value)
+      ? ""
+      : "Should be in proper format";
+
+   setClient((prevClient) => {
+      let tmp = { ...prevClient };
+      Object.keys(tmp).forEach((key) => (tmp[key].error = error[key]));
+      return tmp;
+   });
+   return Object.values(error).every((v) => v === "");
+};
+
+const ClientForm = ({ client, setClient }) => {
    const {
       AutoCompleteInput,
+      setValue: setAutoCValue,
       value: autoCValue,
       defaultValue: autoCDefaultValue,
    } = useAutoCompleteInput({
       label: "Client",
       options: ["red", "Blue", "Green", "Yellow"],
    });
-   const validateClient = () => {
-      let error = {};
-      error.name = /^[a-zA-Z ]{2,20}$/.test(client.name.value.trim())
-         ? ""
-         : "Should be between 2 and 20 characters";
-      error.phone = /^\d{11}$/.test(client.phone.value)
-         ? ""
-         : "Should be 11 numbers";
-      error.email = /^$|.+@.+\..+/.test(client.email.value)
-         ? ""
-         : "Should be in proper format";
-
-      setClient((prevClient) => {
-         let tmp = { ...prevClient };
-         Object.keys(tmp).forEach((key) => (tmp[key].error = error[key]));
-         return tmp;
-      });
-      return Object.values(error).every((v) => v === "");
-   };
 
    const handleOnSubmit = (e) => {
       e.preventDefault();
-      if (validateClient()) {
+      if (validateClient(client, setClient)) {
+         //TODO: send client to backend
+         setAutoCValue(client.name.value);
          console.log(client);
       }
    };
@@ -91,9 +94,7 @@ const ClientForm = () => {
                sm={12}
                md={6}
             >
-               {inputTextFields
-                  .slice(0, Math.ceil(inputTextFields.length / 2))
-                  .map((i) => i)}
+               {inputTextFields.slice(0, Math.ceil(inputTextFields.length / 2))}
             </Grid>
             <Grid
                item
@@ -102,12 +103,10 @@ const ClientForm = () => {
                sm={12}
                md={6}
             >
-               {inputTextFields
-                  .slice(
-                     Math.ceil(inputTextFields.length / 2),
-                     inputTextFields.length
-                  )
-                  .map((i) => i)}
+               {inputTextFields.slice(
+                  Math.ceil(inputTextFields.length / 2),
+                  inputTextFields.length
+               )}
             </Grid>
             <Grid item xs={12}>
                <Box
@@ -119,16 +118,16 @@ const ClientForm = () => {
                   <Button
                      startIcon={<AddIcon />}
                      type="submit"
-                     size="large"
-                     variant="contained"
+                     size="medium"
+                     variant="outlined"
                      disabled={autoCValue !== autoCDefaultValue}
                   >
                      Add Client
                   </Button>
                   <Button
                      startIcon={<EditIcon />}
-                     size="large"
-                     variant="contained"
+                     size="medium"
+                     variant="outlined"
                      disabled={autoCValue === autoCDefaultValue}
                   >
                      Edit Client
