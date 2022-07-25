@@ -6,18 +6,25 @@ var path = require('path');
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
 
-
-
 var Item=require("./models/Item");
 
 var app = express();
 
+//DB connection 
+
+mongoose.connect(
+  process.env.MONGO_URI,
+  (err) => {
+  if(err) console.log(err) 
+  else console.log("MongoDB connected");
+  }
+);
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 
-
 app.set('view engine', 'ejs');
-
 
 require("dotenv").config()
 
@@ -26,6 +33,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
@@ -76,7 +85,8 @@ const item=new Item({
     price:price,
     time:`${day}-${month}-${year}` 
   })
- item.save();
+ item.save()
+ .then(console.log("items saved to Database"))
 
 
 
@@ -96,7 +106,7 @@ const item=new Item({
 
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
