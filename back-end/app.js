@@ -11,7 +11,7 @@ var Item=require("./models/Item");
 var app = express();
 
 //DB connection 
-
+var mongoose=require("mongoose")
 mongoose.connect(
   process.env.MONGO_URI,
   (err) => {
