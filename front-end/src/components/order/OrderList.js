@@ -4,7 +4,7 @@ import Paper from "@mui/material/Paper";
 import TableBody from "@mui/material/TableBody";
 import { useState } from "react";
 import useTable from "./useTable";
-import { Chip } from "@mui/material";
+import { Chip, Tooltip } from "@mui/material";
 
 const columns = [
    { field: "id", headerName: "Order ID", width: 70 },
@@ -107,11 +107,7 @@ const OrderList = () => {
                         <TableCell>{order.id}</TableCell>
                         <TableCell>{order.clientName}</TableCell>
                         <TableCell>
-                           <Chip
-                              sx={{ color: "red", borderColor: "red" }}
-                              variant="outlined"
-                              label={order.status}
-                           />
+                           <Status statusName={order.status} />
                         </TableCell>
                         <TableCell>{order.date}</TableCell>
                         <TableCell>{order.price}</TableCell>
@@ -123,5 +119,15 @@ const OrderList = () => {
       </>
    );
 };
-
+export function Status({ statusName }) {
+   return (
+      <Tooltip title="Status">
+         <Chip
+            sx={{ color: "red", borderColor: "red" }}
+            variant="outlined"
+            label={statusName}
+         />
+      </Tooltip>
+   );
+}
 export default OrderList;

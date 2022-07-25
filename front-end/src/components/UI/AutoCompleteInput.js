@@ -18,5 +18,5 @@ export const useAutoCompleteInput = ({ label = "", options }) => {
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [value]);
-   return { AutoCompleteInput, value, defaultValue };
+   return { AutoCompleteInput, setValue, value, defaultValue };
 };

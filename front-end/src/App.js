@@ -2,11 +2,15 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import OrderList from "./components/order/OrderList";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { green, purple } from "@mui/material/colors";
-import { Container, CssBaseline, Stack, Box } from "@mui/material";
+import { Container, CssBaseline, Stack, Box, Typography } from "@mui/material";
 import InfoBox from "./components/UI/InfoBox";
 import PaidIcon from "@mui/icons-material/PaidOutlined";
 // import AutoCompleteInput from "./components/UI/AutoCompleteInput";
-import ClientForm from "./components/ClientFrom";
+// import useClientForm from "./components/ClientFrom";
+import ItemForm from "./components/UI/ItemForm";
+import OrderForm from "./components/order/OrderForm";
+import ItemCard from "./components/Item/ItemCard";
+import ItemList from "./components/Item/ItemList";
 
 const theme = createTheme({
    palette: {
@@ -37,8 +41,13 @@ export default App;
 const MainComponent = () => {
    return (
       <Container>
+         {/* <Typography textAlign="center" variant="h2" gutterBottom>
+            New Order
+         </Typography> */}
          <Box margin={5}>
-            <ClientForm />
+            <OrderForm />
+            {/* <ItemCard /> */}
+            {/* <ItemList /> */}
          </Box>
       </Container>
    );
