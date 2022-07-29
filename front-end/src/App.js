@@ -11,6 +11,7 @@ import ItemForm from "./components/UI/ItemForm";
 import OrderForm from "./components/order/OrderForm";
 import ItemCard from "./components/Item/ItemCard";
 import ItemList from "./components/Item/ItemList";
+import OrderDetails from "./pages/OrderDetails";
 
 const theme = createTheme({
    palette: {
@@ -29,6 +30,8 @@ function App() {
          <Router>
             <Routes>
                <Route path="/" element={<MainComponent />} />
+               <Route path="/new-order" element={<OrderForm />} />
+               <Route path="/order/:id" element={<OrderDetails />} />
             </Routes>
          </Router>
          <CssBaseline />
@@ -39,18 +42,18 @@ function App() {
 export default App;
 
 const MainComponent = () => {
-   return (
-      <Container>
-         {/* <Typography textAlign="center" variant="h2" gutterBottom>
-            New Order
-         </Typography> */}
-         <Box margin={5}>
-            <OrderForm />
-            {/* <ItemCard /> */}
-            {/* <ItemList /> */}
-         </Box>
-      </Container>
-   );
+   // return (
+   //    <Container>
+   //       {/* <Typography textAlign="center" variant="h2" gutterBottom>
+   //          New Order
+   //       </Typography> */}
+   //       <Box margin={5}>
+   //          <OrderForm />
+   //          {/* <ItemCard /> */}
+   //          {/* <ItemList /> */}
+   //       </Box>
+   //    </Container>
+   // );
    return (
       <>
          <header>
