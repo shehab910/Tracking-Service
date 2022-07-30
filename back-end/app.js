@@ -4,7 +4,7 @@ var path = require("path");
 // var logger = require('morgan');
 
 // var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
+var clientsRouter = require("./routes/clients");
 
 var Item = require("./models/Item");
 var dotenv = require("dotenv");
@@ -33,7 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+app.use("/clients", clientsRouter);
 
 // catch 404 and forward to error handler
 
