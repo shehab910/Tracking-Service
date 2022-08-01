@@ -9,7 +9,7 @@ import {
    Tooltip,
    Typography,
 } from "@mui/material";
-import { Status } from "../order/OrderList";
+import StatusChip from "../status/StatusChip";
 import { convertToEGP } from "../../utils/utils";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
@@ -79,7 +79,7 @@ const ItemCard = ({ item }) => {
                   <Typography>{`x ${count}`}</Typography>
                </Tooltip>
                <Box padding={1} />
-               <Status statusName="Paid" />
+               <StatusChip statusName="Paid" />
                <Box padding={1} />
                <Tooltip title="Additional Notes">
                   <Typography variant="body2" color="text.secondary">

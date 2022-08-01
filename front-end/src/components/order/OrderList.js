@@ -4,7 +4,7 @@ import Paper from "@mui/material/Paper";
 import TableBody from "@mui/material/TableBody";
 import { useState } from "react";
 import useTable from "./useTable";
-import { Chip, Tooltip } from "@mui/material";
+import StatusChip from "../status/StatusChip";
 
 const columns = [
    { field: "id", headerName: "Order ID", width: 70 },
@@ -24,33 +24,39 @@ const columns = [
 ];
 
 const rowsData = [
-   { id: 1, date: "1-2-2022", clientName: "Jon", status: "paid", price: 13.99 },
+   {
+      id: 1,
+      date: "1-2-2022",
+      clientName: "Jon",
+      status: "requested",
+      price: 13.99,
+   },
    {
       id: 2,
       date: "2-2-2022",
       clientName: "Cersei",
-      status: "paid",
+      status: "requested",
       price: 23.99,
    },
    {
       id: 3,
       date: "3-2-2022",
       clientName: "Jaime",
-      status: "paid",
+      status: "ordered",
       price: 33.99,
    },
    {
       id: 4,
       date: "4-2-2022",
       clientName: "Arya",
-      status: "paid",
+      status: "arrived-abroad",
       price: 43.99,
    },
    {
       id: 5,
       date: "5-2-2022",
       clientName: "Daenerys",
-      status: "paid",
+      status: "arrived-home",
       price: 53.99,
    },
    { id: 6, date: "6-2-2022", clientName: null, status: "paid", price: 63.99 },
@@ -58,21 +64,21 @@ const rowsData = [
       id: 7,
       date: "7-2-2022",
       clientName: "Ferrara",
-      status: "paid",
+      status: "delivered",
       price: 73.99,
    },
    {
       id: 8,
       date: "8-2-2022",
       clientName: "Rossini",
-      status: "paid",
+      status: "delivered",
       price: 83.99,
    },
    {
       id: 9,
       date: "9-2-2022",
       clientName: "Harvey",
-      status: "paid",
+      status: "delivered",
       price: 93.99,
    },
 ];
@@ -107,7 +113,7 @@ const OrderList = () => {
                         <TableCell>{order.id}</TableCell>
                         <TableCell>{order.clientName}</TableCell>
                         <TableCell>
-                           <Status statusName={order.status} />
+                           <StatusChip status={order.status} />
                         </TableCell>
                         <TableCell>{order.date}</TableCell>
                         <TableCell>{order.price}</TableCell>
@@ -119,15 +125,5 @@ const OrderList = () => {
       </>
    );
 };
-export function Status({ statusName }) {
-   return (
-      <Tooltip title="Status">
-         <Chip
-            sx={{ color: "red", borderColor: "red" }}
-            variant="outlined"
-            label={statusName}
-         />
-      </Tooltip>
-   );
-}
+
 export default OrderList;

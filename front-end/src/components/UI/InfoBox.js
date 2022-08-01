@@ -2,9 +2,13 @@ import React from "react";
 import Box from "@mui/material/Box";
 import { Stack, Typography } from "@mui/material";
 import { Container } from "@mui/system";
+import { firstLetterUpper } from "../../utils/utils";
 
+/**
+ * @param {{ status: string, value: Number, mainColor: string, secondaryColor: string, icon }} props
+ */
 const InfoBox = (props) => {
-   const { Icon, title, value, mainColor, bgColor } = props;
+   const { title, value, mainColor, secondaryColor, icon: Icon } = props;
    return (
       <Box
          display="flex"
@@ -12,7 +16,7 @@ const InfoBox = (props) => {
          alignItems="center"
          gap={4}
          sx={{
-            backgroundColor: `${bgColor}`,
+            backgroundColor: `${secondaryColor}`,
             borderRadius: "25px",
             width: "fit-content",
             margin: "0 auto",
@@ -21,7 +25,7 @@ const InfoBox = (props) => {
       >
          <Container
             sx={{
-               maxWidth: "fit-content",
+               width: "fit-content",
                height: "fit-content",
                padding: "0.5rem !important",
                borderRadius: "20px",
@@ -37,7 +41,7 @@ const InfoBox = (props) => {
          </Container>
          <Stack justifyContent="space-evenly">
             <Typography fontSize={16} fontWeight="400" variant="p">
-               {title}
+               {firstLetterUpper(title).replace("-", " ")}
             </Typography>
             <Typography fontSize={36} fontWeight="600" variant="p">
                {value}

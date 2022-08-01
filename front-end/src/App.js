@@ -4,7 +4,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { green, purple } from "@mui/material/colors";
 import { Container, CssBaseline, Stack, Box, Typography } from "@mui/material";
 import InfoBox from "./components/UI/InfoBox";
-import PaidIcon from "@mui/icons-material/PaidOutlined";
 // import AutoCompleteInput from "./components/UI/AutoCompleteInput";
 // import useClientForm from "./components/ClientFrom";
 import ItemForm from "./components/UI/ItemForm";
@@ -12,6 +11,8 @@ import OrderForm from "./components/order/OrderForm";
 import ItemCard from "./components/Item/ItemCard";
 import ItemList from "./components/Item/ItemList";
 import OrderDetails from "./pages/OrderDetails";
+import { statuses } from "./components/status/statusData";
+import StatusInfoBox from "./components/status/StatusInfoBox";
 
 const theme = createTheme({
    palette: {
@@ -69,18 +70,9 @@ const MainComponent = () => {
                maxWidth="lg"
             >
                <Stack direction="row">
-                  {Array(5)
-                     .fill(0)
-                     .map((_, index) => (
-                        <InfoBox
-                           key={index}
-                           Icon={PaidIcon}
-                           title="Paid"
-                           value="20"
-                           mainColor="#6437fd"
-                           bgColor="#f3efff"
-                        />
-                     ))}
+                  {statuses.map((status, index) => (
+                     <StatusInfoBox key={index} status={status} value={20} />
+                  ))}
                </Stack>
                <OrderList />
             </Container>
