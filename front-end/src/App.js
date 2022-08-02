@@ -1,18 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import OrderList from "./components/order/OrderList";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { green, purple } from "@mui/material/colors";
-import { Container, CssBaseline, Stack, Box, Typography } from "@mui/material";
-import InfoBox from "./components/UI/InfoBox";
-// import AutoCompleteInput from "./components/UI/AutoCompleteInput";
-// import useClientForm from "./components/ClientFrom";
-import ItemForm from "./components/UI/ItemForm";
+import { Container, CssBaseline, Stack } from "@mui/material";
 import OrderForm from "./components/order/OrderForm";
-import ItemCard from "./components/Item/ItemCard";
-import ItemList from "./components/Item/ItemList";
 import OrderDetails from "./pages/OrderDetails";
 import { statuses } from "./components/status/statusData";
 import StatusInfoBox from "./components/status/StatusInfoBox";
+import Layout from "./components/layout/Layout";
+import OrderList from "./components/order/OrderList";
 
 const theme = createTheme({
    palette: {
@@ -29,13 +24,15 @@ function App() {
    return (
       <ThemeProvider theme={theme}>
          <Router>
-            <Routes>
-               <Route path="/" element={<MainComponent />} />
-               <Route path="/new-order" element={<OrderForm />} />
-               <Route path="/order/:id" element={<OrderDetails />} />
-            </Routes>
+            <Layout>
+               <Routes>
+                  <Route path="/" element={<MainComponent />} />
+                  <Route path="/new-order" element={<OrderForm />} />
+                  <Route path="/order/:id" element={<OrderDetails />} />
+               </Routes>
+               <CssBaseline />
+            </Layout>
          </Router>
-         <CssBaseline />
       </ThemeProvider>
    );
 }
@@ -57,26 +54,29 @@ const MainComponent = () => {
    // );
    return (
       <>
-         <header>
-            <h2>Dashboard</h2>
-         </header>
-         <main>
-            <Container
+         <Container
+            sx={{
+               display: "flex",
+               flexDirection: "column",
+               gap: "2rem",
+            }}
+         >
+            <Stack
+               direction="row"
                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "2rem",
+                  maxWidth: "80vw",
+                  overflowX: "auto",
+                  margin: "0 auto",
                }}
-               maxWidth="lg"
+               gap={1}
             >
-               <Stack direction="row">
-                  {statuses.map((status, index) => (
-                     <StatusInfoBox key={index} status={status} value={20} />
-                  ))}
-               </Stack>
-               <OrderList />
-            </Container>
-         </main>
+               {statuses.map((status, index) => (
+                  <StatusInfoBox key={index} status={status} value={20} />
+               ))}
+            </Stack>
+            {/* //! Table is not responsive */}
+            <OrderList />
+         </Container>
       </>
    );
 };
