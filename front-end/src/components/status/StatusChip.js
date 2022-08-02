@@ -1,23 +1,22 @@
-import { Chip, Tooltip } from "@mui/material";
+import { Chip } from "@mui/material";
 import { firstLetterUpper } from "../../utils/utils";
 import { getStatusProps } from "./statusData";
 
-/** @param {{status: Status}} */
-function StatusChip({ status }) {
+/** @param {{status: Status, sx}} */
+function StatusChip({ status, sx }) {
    const { mainColor: statusColor } = getStatusProps(status);
    return (
-      <Tooltip title="Status">
-         <Chip
-            sx={{
-               color: "#fcfcfc",
-               background: `${statusColor}`,
-               minWidth: "120px",
-               fontWeight: "bold",
-               letterSpacing: "0.3px",
-            }}
-            label={firstLetterUpper(status).replace("-", " ")}
-         />
-      </Tooltip>
+      <Chip
+         sx={{
+            color: "#fcfcfc",
+            background: `${statusColor}`,
+            minWidth: "120px",
+            fontWeight: "bold",
+            letterSpacing: "0.3px",
+            ...sx,
+         }}
+         label={firstLetterUpper(status).replace("-", " ")}
+      />
    );
 }
 

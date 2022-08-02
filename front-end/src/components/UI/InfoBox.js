@@ -18,7 +18,7 @@ const InfoBox = (props) => {
          sx={{
             backgroundColor: `${secondaryColor}`,
             borderRadius: "25px",
-            width: "fit-content",
+            width: "max-content",
             margin: "0 auto",
             padding: "1rem",
          }}
