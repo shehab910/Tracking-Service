@@ -45,7 +45,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
    })
 );
 
-const AppbarSpacer = styled("div")(({ theme }) => ({
+export const AppbarSpacer = styled("div")(({ theme }) => ({
    ...theme.mixins.toolbar,
 }));
 

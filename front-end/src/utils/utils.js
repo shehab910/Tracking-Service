@@ -1,4 +1,5 @@
 import TextField from "@mui/material/TextField";
+import { useDispatch } from "react-redux";
 export const firstLetterUpper = (string) => {
    return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -9,16 +10,22 @@ export const firstLetterUpper = (string) => {
  * {
  * fieldName: { value: "", error: "", textFieldProps: {placeholder: "", required: Boolean, etc}  }
  * }.
- * @param {Function} setFieldData - Function to set the field data.
+ * @param {Function} fieldDataReducer - Function to set the field data.
  * @param {Boolean} disabled - If true, All inputs will be disabled
  * @returns {Array} Array of styled TextFields
  */
-export const getInputFields = (fieldData, setFieldData, disabled = false) => {
+export const useInputFields = (
+   fieldData,
+   fieldDataReducer,
+   disabled = false
+) => {
+   const dispatch = useDispatch();
    const handleInputChange = (e) => {
       const { name, value } = e.target;
-      setFieldData((prev) => {
-         return { ...prev, [name]: { ...prev[name], value: value } };
-      });
+      dispatch(fieldDataReducer({ name, value }));
+      // setFieldData((prev) => {
+      //    return { ...prev, [name]: { ...prev[name], value: value } };
+      // });
    };
    return Object.keys(fieldData).map((item, index) => (
       <TextField
@@ -98,4 +105,12 @@ export const regexTesters = {
          input
       ),
    isEmail: (input) => /[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim.test(input),
+};
+
+export const extractErrorMessage = (error) => {
+   return (
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString()
+   );
 };

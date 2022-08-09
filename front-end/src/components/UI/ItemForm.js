@@ -1,15 +1,16 @@
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
 import {
    fetchConvertUSDtoEGP,
-   getInputFields,
+   useInputFields,
    sliceBetween,
    regexTesters,
+   firstLetterUpper,
 } from "../../utils/utils";
 import { useAsync } from "../../utils/customhooks";
 
-const apiurl = "http://localhost:5000/";
+const apiuri = process.env.REACT_APP_BACKEND_URI;
 
 const initialItemData = {
    product_link: {
@@ -103,7 +104,7 @@ const ItemForm = ({ setItems }) => {
       if (link === undefined || link === "" || !validateLink(item, setItem))
          return;
       if (link) {
-         const productInfoRes = await fetch(`${apiurl}getproduct/`, {
+         const productInfoRes = await fetch(`${apiuri}/getproduct/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ url: link }),
@@ -136,6 +137,7 @@ const ItemForm = ({ setItems }) => {
 
       setItem((prev) => {
          let tmp = { ...prev };
+         tmp.product_link.textFieldProps.helperText = " ";
          tmp.product_name.value = `${newTitle}`;
          tmp.original_price.value = `${newPrice}`;
          Object.keys(tmp).forEach(
@@ -149,13 +151,36 @@ const ItemForm = ({ setItems }) => {
       e.preventDefault();
       if (validateItem(item, setItem)) {
          let tmp = { ...item };
-         Object.keys(tmp).forEach((key) => (tmp[key] = tmp[key].value));
+         Object.keys(tmp).forEach((key) => (tmp[key] = tmp[key].value || ""));
          tmp.imgsrc = itemImgSrc;
          console.log(tmp);
          setItems((prev) => [...prev, { ...tmp }]);
       }
    };
-   const inputFields = getInputFields(item, setItem);
+   const inputFields = Object.keys(item).map((curritem, index) => (
+      <TextField
+         margin="normal"
+         key={index}
+         variant="outlined"
+         label={firstLetterUpper(curritem).replace("_", " ")}
+         name={curritem}
+         value={item[curritem].value}
+         onChange={(e) => {
+            const { name, value } = e.target;
+
+            setItem((prev) => {
+               return { ...prev, [name]: { ...prev[name], value: value } };
+            });
+         }}
+         placeholder={item[curritem].placeholder}
+         {...(item[curritem].error && {
+            error: true,
+            helperText: item[curritem].error,
+         })}
+         {...item[curritem].textFieldProps}
+         hidden={true}
+      />
+   ));
    return (
       <form onSubmit={handleOnSumbit}>
          <Grid container spacing={3}>

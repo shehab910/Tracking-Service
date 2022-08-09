@@ -7,14 +7,18 @@ import {
    Box,
    Button,
    Container,
+   TextField,
 } from "@mui/material";
 import PublishIcon from "@mui/icons-material/Publish";
 import React, { useEffect, useState } from "react";
-import { getInputFields } from "../../utils/utils";
-import ClientForm, { initialClientData, validateClient } from "../ClientFrom";
+import { firstLetterUpper, useInputFields } from "../../utils/utils";
+import ClientForm, { validateClient } from "../ClientForm";
 import ItemForm from "../UI/ItemForm";
 import ItemCard from "../Item/ItemCard";
 import ItemList, { dumpstate } from "../Item/ItemList";
+import ResponsiveDialog from "../UI/Dialog";
+import { useSelector } from "react-redux";
+import { useAsync, useEffectOnce } from "../../utils/customhooks";
 
 const initialOrderFormData = {
    shippment_id: {
@@ -31,7 +35,7 @@ const initialOrderFormData = {
       value: "",
       error: "",
       textFieldProps: {
-         placeholder: "Ordered",
+         placeholder: "requested",
          required: true,
          helperText: "",
       },
@@ -42,7 +46,6 @@ const initialOrderFormData = {
       error: "",
       textFieldProps: {
          placeholder: "49.99",
-         required: true,
          disabled: true,
          helperText: "Active when shipped locally is checked",
       },
@@ -61,7 +64,9 @@ export const validateOrderInfo = (orderInfo, setOrderInfo) => {
    )
       ? ""
       : "Should be between 2 and 20 characters";
-   error.shipping_fees = /^[\d]+(\.[\d]+)?$/.test(orderInfo.shipping_fees.value)
+   error.shipping_fees = /^$|^[\d]+(\.[\d]+)?$/.test(
+      orderInfo.shipping_fees.value
+   )
       ? ""
       : "Should be in proper format ex. 21.99";
 
@@ -72,43 +77,161 @@ export const validateOrderInfo = (orderInfo, setOrderInfo) => {
    });
    return Object.values(error).every((v) => v === "");
 };
-
+const apiUrl = process.env.REACT_APP_BACKEND_URI;
 const OrderForm = () => {
-   const [client, setClient] = useState(initialClientData);
    const [items, setItems] = useState([]);
    const [isShipped, setIsShipped] = useState(false);
-   const [orderInfo, setOrderInfo] = useState(initialOrderFormData);
+   const [orderInfoForm, setOrderInfoForm] = useState(initialOrderFormData);
+   const [isChosen, setIsChosen] = useState(false);
+   const [chosenClient, setChosenClient] = useState({});
+   const [isSubmitted, setIsSubmitted] = useState(false);
 
+   const {
+      loading: submitLoading,
+      error: submitError,
+      value: submitResponse,
+   } = useAsync(async () => {
+
+   }, [isSubmitted]);
+
+   const { currClient, autoCAttributes } = useSelector(
+      (state) => state.newClientForm
+   );
+   const { autoCValue, autoCDefaultValue } = autoCAttributes;
+
+   useEffectOnce(() => {
+      const newShippment = async () => {
+         const resp = await fetch(`${apiUrl}/new-shippment`);
+         const { shippmentId } = await resp.json();
+         setOrderInfoForm((prevOrderInfo) => {
+            let tmp = { ...prevOrderInfo };
+            tmp.shippment_id.value = shippmentId;
+            return tmp;
+         });
+      };
+      newShippment();
+   });
    const handleIsShipped = (e) => {
       console.log(e.target.checked);
       setIsShipped(e.target.checked);
 
-      setOrderInfo((prev) => {
+      setOrderInfoForm((prev) => {
          let tmp = { ...prev };
          tmp.shipping_fees.textFieldProps.disabled = !e.target.checked;
          if (!e.target.checked) tmp.shipping_fees.value = "";
          return tmp;
       });
    };
-   const inputFields = getInputFields(orderInfo, setOrderInfo);
+   const inputFields = Object.keys(orderInfoForm).map((item, index) => (
+      <TextField
+         margin="normal"
+         key={index}
+         variant="outlined"
+         label={firstLetterUpper(item).replace("_", " ")}
+         name={item}
+         value={orderInfoForm[item].value}
+         onChange={(e) => {
+            const { name, value } = e.target;
+
+            setOrderInfoForm((prev) => {
+               return { ...prev, [name]: { ...prev[name], value: value } };
+            });
+         }}
+         placeholder={orderInfoForm[item].placeholder}
+         {...(orderInfoForm[item].error && {
+            error: true,
+            helperText: orderInfoForm[item].error,
+         })}
+         {...orderInfoForm[item].textFieldProps}
+         hidden={true}
+      />
+   ));
 
    const handleSubmitOrder = (e) => {
       e.preventDefault();
-      if (validateOrderInfo(orderInfo, setOrderInfo)) {
-         console.log(items);
-         console.log(orderInfo);
+      if (validateOrderInfo(orderInfoForm, setOrderInfoForm)) {
+         const orderInfoMapped = { ...orderInfoForm };
+         Object.keys(orderInfoMapped).forEach((key) => {
+            orderInfoMapped[key] = orderInfoMapped[key].value;
+         });
+         const order = {
+            clientId: chosenClient.cid,
+            items: items,
+            orderInfo: orderInfoMapped,
+         };
+         const postNewOrder = async (order) => {
+            const resp = await fetch(`${apiUrl}/orders`, {
+               method: "POST",
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify(order),
+            });
+            const { message } = await resp.json();
+            console.log(message);
+         };
+         postNewOrder(order);
       }
    };
+   const [open, setOpen] = useState(false);
+
+   const handleOnUpdateClient = (e) => {
+      e.preventDefault();
+      console.log(currClient);
+      setChosenClient(currClient);
+      setOpen(false);
+      setIsChosen(true);
+   };
+   const chooseInner = (
+      <Button
+         startIcon={<PublishIcon />}
+         size="large"
+         variant="contained"
+         onClick={handleOnUpdateClient}
+         disabled={autoCValue === autoCDefaultValue}
+      >
+         Choose Client
+      </Button>
+   );
+
+   const clientInfo = (
+      <Box p={2}>
+         {isChosen && (
+            <>
+               <h2>{chosenClient?.name}</h2>
+
+               <p>
+                  {chosenClient?.email}
+                  <br />
+                  {chosenClient?.phone}
+                  <br />
+                  {chosenClient?.address}
+                  <br />
+               </p>
+            </>
+         )}
+         {!isChosen && <h2>No Client chosen</h2>}
+      </Box>
+   );
 
    return (
       <Container sx={{ marginY: 3 }}>
          <Stack spacing={3}>
             <h1>New Order</h1>
-            <ClientForm client={client} setClient={setClient} />
+            <ResponsiveDialog
+               open={open}
+               setOpen={setOpen}
+               dialogTitle="Choose client"
+               dialogHint="Hint: You can add or edit client info here"
+               dialogActions={chooseInner}
+            >
+               {/* <ClientForm client={client} setClient={setClient} /> */}
+               <ClientForm />
+            </ResponsiveDialog>
+            {clientInfo}
             <Button
                startIcon={<PublishIcon />}
                size="large"
                variant="contained"
+               onClick={() => setOpen(true)}
                // disabled={autoCValue === autoCDefaultValue}
             >
                Choose Client

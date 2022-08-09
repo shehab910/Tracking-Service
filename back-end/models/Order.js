@@ -1,14 +1,10 @@
 const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema({
-   orderId: {
-      type: String,
-      required: false,
-   },
    shippmentId: {
       type: String,
       required: false,
    },
-   clientName: {
+   clientId: {
       type: String,
       required: true,
    },
@@ -16,11 +12,11 @@ const orderSchema = new mongoose.Schema({
       type: Array,
       required: true,
    },
-   date: {
-      type: Date,
-      required: false,
-   },
-   status: {
+   // date: {
+   //    type: Date,
+   //    required: false,
+   // },
+   delivery_status: {
       type: String,
       required: false,
    },

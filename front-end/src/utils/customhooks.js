@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export const useEffectOnce = (cb) => {
-   useEffect(() => {
-      cb();
-   }, []);
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   useEffect(cb, []);
 };
 
 export function useAsync(callback, dependencies = []) {
@@ -28,3 +27,15 @@ export function useAsync(callback, dependencies = []) {
 
    return { loading, error, value };
 }
+
+export const useUpdateEffect = (cb, dependencies) => {
+   const isFirstTimeRef = useRef(true);
+   useEffect(() => {
+      if (isFirstTimeRef.current) {
+         isFirstTimeRef.current = false;
+         return;
+      }
+      cb();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, dependencies);
+};

@@ -1,19 +1,21 @@
-var express = require("express");
-var path = require("path");
-// var cookieParser = require('cookie-parser');
-// var logger = require('morgan');
+const express = require("express");
+const path = require("path");
+// const cookieParser = require('cookie-parser');
+// const logger = require('morgan');
 
-// var indexRouter = require('./routes/index');
-var clientsRouter = require("./routes/clients");
+// const indexRouter = require('./routes/index');
+const clientsRouter = require("./routes/clients");
+const ordersRouter = require("./routes/orders");
 
-var Item = require("./models/Item");
-var dotenv = require("dotenv");
+const Item = require("./models/Item");
+const dotenv = require("dotenv");
 const dottenvc = dotenv.config();
 const cors = require("cors");
-var app = express();
+const app = express();
 app.use(cors({ origin: "*", credentials: true }));
 //DB connection
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
+const getAndUpdateCounter = require("./utils/getAndUpdateCounter");
 mongoose.connect(process.env.MONGO_URI, (err) => {
    if (err) console.log(err);
    else console.log("MongoDB connected");
@@ -34,6 +36,17 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // app.use('/', indexRouter);
 app.use("/clients", clientsRouter);
+app.use("/orders", ordersRouter);
+
+app.get("/new-shippment", async (req, res) => {
+   try {
+      const shippmentId = await getAndUpdateCounter("shippment_seq_value");
+      res.json({ shippmentId }).status(200);
+   } catch (err) {
+      getAndUpdateCounter("shippment_seq_value", true);
+      res.json({ error: err }).status(500);
+   }
+});
 
 // catch 404 and forward to error handler
 
