@@ -2,7 +2,7 @@ import React from "react";
 import Box from "@mui/material/Box";
 import { Stack, Typography } from "@mui/material";
 import { Container } from "@mui/system";
-import { firstLetterUpper } from "../../utils/utils";
+import { firstLetterUpper } from "../utils/utils";
 
 /**
  * @param {{ status: string, value: Number, mainColor: string, secondaryColor: string, icon }} props

@@ -1,5 +1,5 @@
 import { getStatusProps } from "./statusData";
-import InfoBox from "../UI/InfoBox";
+import InfoBox from "../InfoBox";
 /**
  * @typedef {import Status from '../../types'} Status
  */

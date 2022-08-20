@@ -7,7 +7,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Box, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { AppbarSpacer } from "../layout/Layout";
+import { AppbarSpacer } from "./layout/Layout";
 
 export default function ResponsiveDialog(props) {
    const { open, setOpen, children, dialogActions, dialogTitle, dialogHint } =

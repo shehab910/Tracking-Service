@@ -4,6 +4,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import PeopleIcon from "@mui/icons-material/People";
 /***************ICONS********************/
 /***************MUI**********************/
 import { styled, useTheme } from "@mui/material/styles";
@@ -52,6 +53,7 @@ export const AppbarSpacer = styled("div")(({ theme }) => ({
 const routesInfo = [
    { path: "/", name: "Home", icon: <HomeIcon /> },
    { path: "/new-order", name: "New Order", icon: <AddShoppingCartIcon /> },
+   { path: "/clients", name: "Clients", icon: <PeopleIcon /> },
 ];
 
 export default function Layout(props) {

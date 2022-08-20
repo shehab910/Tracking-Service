@@ -114,3 +114,66 @@ export const extractErrorMessage = (error) => {
       error.toString()
    );
 };
+
+/**
+ * @param {"facebook" | "instagram" | "whatsapp"} socialMediaPlatform
+ * @param {String} socialMediaId
+ * @returns {String} social media profile url
+ */
+
+export const getSocialMessageUrl = (socialMediaPlatform, socialMediaId) => {
+   const os = getOS();
+   switch (`${socialMediaPlatform}`) {
+      case "facebook":
+         switch (os) {
+            case "android":
+               //open chat in android messenger app
+               return `https://m.me/${socialMediaId}`;
+            case "ios":
+               return `fb-messenger://user-thread/${socialMediaId}`;
+            default:
+               return `https://www.facebook.com/messages/t/${socialMediaId}`;
+         }
+      case "instagram":
+         switch (os) {
+            case "android":
+               return `instagram://user?username=${socialMediaId}`;
+            case "ios":
+               return `instagram://user?username=${socialMediaId}`;
+            default:
+               return `https://www.instagram.com/${socialMediaId}`;
+         }
+      case "whatsapp":
+         switch (os) {
+            case "android":
+               return `https://wa.me/${socialMediaId}`;
+            case "ios":
+               return `https://wa.me/${socialMediaId}`;
+            default:
+               return `https://web.whatsapp.com/send?phone=${socialMediaId}`;
+         }
+      default:
+         return "#";
+   }
+};
+
+/**
+ * Determine the mobile operating system.
+ * This function returns one of 'iOS', 'Android' or 'Browser'.
+ *
+ * @returns {"android" | "ios" | "browser"}
+ */
+export const getOS = () => {
+   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+   if (/android/i.test(userAgent)) {
+      return "android";
+   }
+
+   // iOS detection from: http://stackoverflow.com/a/9039885/177710
+   if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+      return "ios";
+   }
+
+   return "browser";
+};

@@ -7,8 +7,8 @@ import {
    sliceBetween,
    regexTesters,
    firstLetterUpper,
-} from "../../utils/utils";
-import { useAsync } from "../../utils/customhooks";
+} from "../utils/utils";
+import { useAsync } from "../utils/customhooks";
 
 const apiuri = process.env.REACT_APP_BACKEND_URI;
 

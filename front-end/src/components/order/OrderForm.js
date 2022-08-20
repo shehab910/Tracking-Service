@@ -10,37 +10,31 @@ import {
    TextField,
 } from "@mui/material";
 import PublishIcon from "@mui/icons-material/Publish";
-import React, { useEffect, useState } from "react";
-import { firstLetterUpper, useInputFields } from "../../utils/utils";
-import ClientForm, { validateClient } from "../ClientForm";
-import ItemForm from "../UI/ItemForm";
-import ItemCard from "../Item/ItemCard";
-import ItemList, { dumpstate } from "../Item/ItemList";
-import ResponsiveDialog from "../UI/Dialog";
+import { useState } from "react";
+import { firstLetterUpper } from "../../utils/utils";
+import ClientForm from "../client/ClientForm";
+import ItemForm from "../ItemForm";
+import ItemList from "../Item/ItemList";
+import ResponsiveDialog from "../Dialog";
 import { useSelector } from "react-redux";
-import { useAsync, useEffectOnce } from "../../utils/customhooks";
+import { useAsync } from "../../utils/customhooks";
+import ComboBox from "../ComboBox";
+import { statuses } from "../status/statusData";
 
 const initialOrderFormData = {
-   shippment_id: {
+   date: {
       value: "",
       error: "",
       textFieldProps: {
-         placeholder: "#230",
+         placeholder: "",
          required: true,
-         disabled: true,
-         helperText: "Auto-generated",
+         helperText: " ",
+         type: "datetime-local",
+         InputLabelProps: {
+            shrink: true,
+         },
       },
    },
-   delivery_status: {
-      value: "",
-      error: "",
-      textFieldProps: {
-         placeholder: "requested",
-         required: true,
-         helperText: "",
-      },
-   },
-
    shipping_fees: {
       value: "",
       error: "",
@@ -48,6 +42,7 @@ const initialOrderFormData = {
          placeholder: "49.99",
          disabled: true,
          helperText: "Active when shipped locally is checked",
+         type: "number",
       },
    },
    additonal_notes: {
@@ -59,11 +54,11 @@ const initialOrderFormData = {
 
 export const validateOrderInfo = (orderInfo, setOrderInfo) => {
    let error = {};
-   error.delivery_status = /^[a-zA-Z ]{2,20}$/.test(
-      orderInfo.delivery_status.value.trim()
-   )
-      ? ""
-      : "Should be between 2 and 20 characters";
+   // error.delivery_status = /^[a-zA-Z ]{2,20}$/.test(
+   //    orderInfo.delivery_status.value.trim()
+   // )
+   //    ? ""
+   //    : "Should be between 2 and 20 characters";
    error.shipping_fees = /^$|^[\d]+(\.[\d]+)?$/.test(
       orderInfo.shipping_fees.value
    )
@@ -85,32 +80,32 @@ const OrderForm = () => {
    const [isChosen, setIsChosen] = useState(false);
    const [chosenClient, setChosenClient] = useState({});
    const [isSubmitted, setIsSubmitted] = useState(false);
+   const [shippId, setShippId] = useState("");
+   const [deliveryStatus, setDeliveryStatus] = useState("");
 
    const {
       loading: submitLoading,
       error: submitError,
       value: submitResponse,
-   } = useAsync(async () => {
-
-   }, [isSubmitted]);
+   } = useAsync(async () => {}, [isSubmitted]);
 
    const { currClient, autoCAttributes } = useSelector(
       (state) => state.newClientForm
    );
    const { autoCValue, autoCDefaultValue } = autoCAttributes;
 
-   useEffectOnce(() => {
-      const newShippment = async () => {
-         const resp = await fetch(`${apiUrl}/new-shippment`);
-         const { shippmentId } = await resp.json();
-         setOrderInfoForm((prevOrderInfo) => {
-            let tmp = { ...prevOrderInfo };
-            tmp.shippment_id.value = shippmentId;
-            return tmp;
-         });
-      };
-      newShippment();
-   });
+   // useEffectOnce(() => {
+   //    const newShippment = async () => {
+   //       const resp = await fetch(`${apiUrl}/new-shippment`);
+   //       const { shippmentId } = await resp.json();
+   //       setOrderInfoForm((prevOrderInfo) => {
+   //          let tmp = { ...prevOrderInfo };
+   //          tmp.shippment_id.value = shippmentId;
+   //          return tmp;
+   //       });
+   //    };
+   //    newShippment();
+   // });
    const handleIsShipped = (e) => {
       console.log(e.target.checked);
       setIsShipped(e.target.checked);
@@ -122,17 +117,16 @@ const OrderForm = () => {
          return tmp;
       });
    };
-   const inputFields = Object.keys(orderInfoForm).map((item, index) => (
+   const textInputFields = Object.keys(orderInfoForm).map((item, index) => (
       <TextField
          margin="normal"
-         key={index}
+         key={`${index}${item}`}
          variant="outlined"
          label={firstLetterUpper(item).replace("_", " ")}
          name={item}
          value={orderInfoForm[item].value}
          onChange={(e) => {
             const { name, value } = e.target;
-
             setOrderInfoForm((prev) => {
                return { ...prev, [name]: { ...prev[name], value: value } };
             });
@@ -147,6 +141,26 @@ const OrderForm = () => {
       />
    ));
 
+   const allInputs = [
+      <ComboBox
+         CBState={{ value: shippId, setValue: setShippId }}
+         CBOptions={["1", "2", "3"]}
+         label="Shippment ID"
+         key={-1}
+         required
+      />,
+
+      <ComboBox
+         CBState={{ value: deliveryStatus, setValue: setDeliveryStatus }}
+         CBOptions={[...statuses]}
+         label="Delivery Status"
+         key={-2}
+         required
+      />,
+
+      ...textInputFields,
+   ];
+
    const handleSubmitOrder = (e) => {
       e.preventDefault();
       if (validateOrderInfo(orderInfoForm, setOrderInfoForm)) {
@@ -154,11 +168,14 @@ const OrderForm = () => {
          Object.keys(orderInfoMapped).forEach((key) => {
             orderInfoMapped[key] = orderInfoMapped[key].value;
          });
+         orderInfoMapped.shipping_id = shippId;
+         orderInfoMapped.delivery_status = deliveryStatus;
          const order = {
             clientId: chosenClient.cid,
             items: items,
             orderInfo: orderInfoMapped,
          };
+         console.log(order);
          const postNewOrder = async (order) => {
             const resp = await fetch(`${apiUrl}/orders`, {
                method: "POST",
@@ -168,7 +185,7 @@ const OrderForm = () => {
             const { message } = await resp.json();
             console.log(message);
          };
-         postNewOrder(order);
+         // postNewOrder(order);
       }
    };
    const [open, setOpen] = useState(false);
@@ -223,7 +240,6 @@ const OrderForm = () => {
                dialogHint="Hint: You can add or edit client info here"
                dialogActions={chooseInner}
             >
-               {/* <ClientForm client={client} setClient={setClient} /> */}
                <ClientForm />
             </ResponsiveDialog>
             {clientInfo}
@@ -238,7 +254,7 @@ const OrderForm = () => {
             </Button>
             <ItemList itemsState={[items, setItems]} />
             <ItemForm setItems={setItems} />
-            <div>
+            <form onSubmit={handleSubmitOrder}>
                <Grid container spacing={2}>
                   <Grid
                      item
@@ -247,7 +263,7 @@ const OrderForm = () => {
                      sm={12}
                      md={6}
                   >
-                     {inputFields.slice(0, Math.ceil(inputFields.length / 2))}
+                     {allInputs.slice(0, Math.ceil(allInputs.length / 2))}
                   </Grid>
                   <Grid
                      item
@@ -256,9 +272,9 @@ const OrderForm = () => {
                      sm={12}
                      md={6}
                   >
-                     {inputFields.slice(
-                        Math.ceil(inputFields.length / 2),
-                        inputFields.length
+                     {allInputs.slice(
+                        Math.ceil(allInputs.length / 2),
+                        allInputs.length
                      )}
                   </Grid>
                   <Grid item xs={12}>
@@ -280,14 +296,15 @@ const OrderForm = () => {
                            startIcon={<PublishIcon />}
                            size="large"
                            variant="contained"
-                           onClick={handleSubmitOrder}
+                           // onClick={handleSubmitOrder}
+                           type="sumbit"
                         >
                            Submit Order
                         </Button>
                      </Box>
                   </Grid>
                </Grid>
-            </div>
+            </form>
          </Stack>
       </Container>
    );

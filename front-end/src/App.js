@@ -8,6 +8,7 @@ import { statuses } from "./components/status/statusData";
 import StatusInfoBox from "./components/status/StatusInfoBox";
 import Layout from "./components/layout/Layout";
 import OrderList from "./components/order/OrderList";
+import ClientList from "./components/client/ClientList";
 
 const theme = createTheme({
    palette: {
@@ -29,6 +30,7 @@ function App() {
                   <Route path="/" element={<MainComponent />} />
                   <Route path="/new-order" element={<OrderForm />} />
                   <Route path="/order/:id" element={<OrderDetails />} />
+                  <Route path="/clients" element={<ClientList />} />
                </Routes>
                <CssBaseline />
             </Layout>

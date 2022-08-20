@@ -1,12 +1,12 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Grid, Button, Box, Autocomplete, TextField } from "@mui/material";
-import { firstLetterUpper } from "../utils/utils";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
-import { useUpdateEffect } from "../utils/customhooks";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { firstLetterUpper } from "../../utils/utils";
+import { useUpdateEffect } from "../../utils/customhooks";
 import {
    setClientFormData,
    setCurrClient,
@@ -18,7 +18,7 @@ import {
    setMode,
    resetForm,
    editClient,
-} from "../store/slices/newClientSlice";
+} from "../../store/slices/newClientSlice";
 //TODO: improve regex using regex extention
 
 export const initialClientData = {
