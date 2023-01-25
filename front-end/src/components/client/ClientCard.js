@@ -25,12 +25,12 @@ const testClientData = {
    cid: "2",
 };
 
-const ClientCard = (Client) => {
+const ClientCard = ({ Client, sx }) => {
    Client = { ...testClientData };
    const { name, phone, email, address, facebook_id, instagram_id, cid } =
       Client;
    return (
-      <Card variant="outlined" sx={{ m: 2, minWidth: "fit-content" }}>
+      <Card variant="outlined" sx={{ ...sx, minWidth: "fit-content" }}>
          <CardContent>
             <Stack gap={2} width="fit-content">
                <Tooltip arrow title="Client Name - ID">

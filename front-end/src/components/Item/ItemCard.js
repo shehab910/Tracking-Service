@@ -12,7 +12,7 @@ import {
 import { convertToEGP } from "../../utils/utils";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-const ItemCard = ({ item }) => {
+const ItemCard = ({ item, actionsDisabled }) => {
    const {
       product_name = "Item Name",
       additonal_notes = "well meaning and kindly.",
@@ -91,6 +91,7 @@ const ItemCard = ({ item }) => {
                      sx={{ color: "red" }}
                      size="large"
                      onClick={(e) => handleOnDeleteItem(e, itemIndex)}
+                     disabled={actionsDisabled}
                   >
                      <DeleteForeverIcon />
                   </IconButton>

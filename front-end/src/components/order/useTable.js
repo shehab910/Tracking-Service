@@ -26,12 +26,11 @@ const useTable = (records, headCells) => {
                fontWeight: "500",
                fontSize: "1rem",
             },
-            "& tbody tr": {
-               "&:hover": {
-                  backgroundColor: "grey.200",
-                  cursor: "pointer",
-               },
-            },
+            // "& tbody tr": {
+            //    "&:hover": {
+            //       cursor: "pointer",
+            //    },
+            // },
          }}
       >
          <Table>{props.children}</Table>

@@ -5,6 +5,9 @@ import TableBody from "@mui/material/TableBody";
 import { useState } from "react";
 import useTable from "./useTable";
 import StatusChip from "../status/StatusChip";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { IconButton } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const columns = [
    { field: "id", headerName: "Order ID", width: 70 },
@@ -21,6 +24,7 @@ const columns = [
       type: "number",
       width: 160,
    },
+   { field: "action", headerName: "", width: 70 },
 ];
 
 const rowsData = [
@@ -109,7 +113,7 @@ const OrderList = () => {
                <TblHead />
                <TableBody>
                   {rows.slice(0, 5).map((order) => (
-                     <TableRow key={order.id}>
+                     <TableRow hover key={order.id}>
                         <TableCell>{order.id}</TableCell>
                         <TableCell>{order.clientName}</TableCell>
                         <TableCell>
@@ -117,6 +121,13 @@ const OrderList = () => {
                         </TableCell>
                         <TableCell>{order.date}</TableCell>
                         <TableCell>{order.price}</TableCell>
+                        <TableCell>
+                           <Link to={`/order/${order.id}`} target="_blank">
+                              <IconButton color="primary">
+                                 <OpenInNewIcon />
+                              </IconButton>
+                           </Link>
+                        </TableCell>
                      </TableRow>
                   ))}
                </TableBody>

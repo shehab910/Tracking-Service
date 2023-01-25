@@ -72,7 +72,7 @@ export const initialClientData = {
 //    autoCOptions: [],
 //    autoCValue: "",
 // },
-const ClientForm = () => {
+const ClientForm = ({ selectedClient = "shehab" }) => {
    const {
       clientsData,
       clientFormData,
@@ -91,7 +91,19 @@ const ClientForm = () => {
 
    const dispatch = useDispatch();
    useEffect(() => {
-      dispatch(getAllClients());
+      const blez = async () => {
+         await dispatch(getAllClients());
+         console.log(selectedClient);
+         if (autoCOptions.includes(selectedClient)) {
+            dispatch(
+               setAutoCAttributes({
+                  ...autoCAttributes,
+                  autoCValue: selectedClient,
+               })
+            );
+         }
+      };
+      blez();
    }, []);
 
    useUpdateEffect(() => {
